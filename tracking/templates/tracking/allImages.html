@@ -1,0 +1,21 @@
+{% extends 'tracking/base.html' %}
+
+
+{% block title %}
+{% endblock %}
+
+{% block content %}
+<div class="list-group">
+    {% if images %}
+        {% for image in images %}
+            <a href="{% url 'tracking:detailImages' image.short_id %}" class="list-group-item list-group-item-action">
+                <!-- short_id: {{image.short_id}}<br> -->
+                Name: {{ image.attrs.Name }}<br>
+                Running: {{image.attrs.State.Running}}<br>
+                Paused: {{image.attrs.State.Paused}} <br>
+            </a>
+        {% endfor %}
+    {% else %} <h1>No images</h1>
+    {% endif %}
+  </div>
+{% endblock %}

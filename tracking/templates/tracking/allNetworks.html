@@ -1,0 +1,7 @@
+{% extends 'tracking/base.html' %}
+
+{% block content %}
+    {% for network in networks%}
+        {{network.attrs}} <br>
+    {% endfor %}
+{% endblock %}

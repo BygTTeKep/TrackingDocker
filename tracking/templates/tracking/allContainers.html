@@ -1,0 +1,40 @@
+{% extends 'tracking/base.html' %}
+
+{% block content %}
+<style>
+    .blink {
+    -webkit-animation: blink 3s linear infinite;
+    animation: blink 3s linear infinite;
+    }
+    @-webkit-keyframes blink {
+        50% {opacity: 0.1;}
+        51% { opacity: 0.5;}
+        100% { opacity: 0;}
+    }
+    @keyframes blink {
+        50% {opacity: 0.1;}
+        51% { opacity: 0.3;}
+        100% { opacity: 1;}
+    }
+</style>
+<div class="list-group">
+    {% if containers %}
+        {% for container in containers %}
+            <a href="{% url 'tracking:detailContainers' container.short_id %}" class="list-group-item list-group-item-action">
+                <div>
+                        short_id: {{container.short_id}} {% if container.attrs.State.Running %}{% load static %}<img src="{% static 'images/output_kdMmU.png' %}" class="blink" alt="" width="55" height="30">{% else %} <img src="{% static 'images/output_LhJuJ.png' %}" class="" alt="" width="55" height="30"> <br>{% endif %} <br>
+                        Name: {{ container.attrs.Name }}<br>
+                        Paused: {{container.attrs.State.Paused}} <br> 
+                        Status: {% if container.statusContainer %} True {% else %} False {% endif %}
+                    </ul>
+                </div>
+            </a>
+        {% endfor %}
+    {% else %} <h1>No containers</h1>
+    {% endif %}
+  </div>
+{% endblock %}
+<!-- com.docker.compose.version -->
+<!-- State': {'Status': 'exited', 'Running': False, 'Paused': False, 'Restarting': False, -->
+<!-- Env': ['PATH=/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin', 'LANG=C.UTF-8', 'GPG_KEY=A035C8C19219BA821ECEA86B64E628F8D684696D', 'PYTHON_VERSION=3.11.3', PYTHON_PIP_VERSION=22.3.1 -->
+
