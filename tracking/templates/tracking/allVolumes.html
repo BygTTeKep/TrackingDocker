@@ -1,0 +1,17 @@
+{% extends 'tracking/base.html' %}
+
+{% block content %}
+    <div class="list-group">
+        {% if volumes %}
+            {% for volume in volumes %}
+                <div class="list-group-item list-group-item-action">
+                    Name: {{ volume.attrs.Name }}<br>
+                    CreatedAt: {{ volume.attrs.CreatedAt }}<br>
+                    Labels: {{ volume.attrs.Labels }}<br>
+                    Options: {{ volume.attrs.Options }}<br>
+                </div>
+            {% endfor %}
+        {% else %} <h1>No Volumes</h1>
+        {% endif %}
+    </div>
+{% endblock %}

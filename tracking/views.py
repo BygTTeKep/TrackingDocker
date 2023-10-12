@@ -9,46 +9,60 @@ import time
 client = docker.from_env()
 
 # переписать 
-def decode_dict(objectIndex: int, objectName:str) -> str:
-    objectFormat = str(client.objectName.list(all=True)[objectIndex].attrs).replace("'", '"').replace("None", '"None"').replace("False", '"False"').replace("True", '"True"').replace('""False""', '"False"')
-    # print(re.search("CMD [\""+ r"[\w\.-]+"+ "\"]",str(client.objectName.list(all=True)[objectIndex].attrs).replace("'", '"').replace("None", '"None"').replace("False", '"False"').replace("True", '"True"').replace('""False""', '"False"')))
-    if re.search("CMD [\""+ r"[\w\.-]+"+ "\"]", objectFormat) == None:
-        return json.loads(objectFormat)
-    else:
-        objectAttrs = re.sub("CMD [\""+ r"[\w\.-]+"+ "\"]", re.search("CMD [\""+ r"[\w\.-]+"+ "\"]",objectFormat).group().replace('"', "'"), objectFormat)
-        return json.loads(objectAttrs)
+def decode_dict(objectData:dict):
+    objectFormat = str(objectData).replace("'", '"').replace("None", '"None"').replace("False", '"False"').replace("True", '"True"').replace('""False""', '"False"')
+    print(objectFormat)
+    # if re.search("CMD [\""+ r"[\w\.-]+"+ "\"]", objectFormat) == None:
+    #     print( json.loads(objectFormat))
+    # else:
+    #     objectAttrs = re.sub("CMD [\""+ r"[\w\.-]+"+ "\"]", re.search("CMD [\""+ r"[\w\.-]+"+ "\"]",objectFormat).group().replace('"', "'"), objectFormat)
+    #     print( json.loads(objectAttrs))
 
 
 def get_сontainers(request:HttpRequest):
+    # Добавить возможность создания конейнера (POST, GET ?) 
     context = {
         "containers":client.containers.list(all=True),
-        "statusContainer": status_container.delay()
+        # "statusContainer": status_container.delay()
     }
-    return render(request, "tracking/allContainers.html", context)
-
-def get_containers_json(request:HttpRequest):
-    context = {}
-    objectName = "containers"
-    for i in range(0, len(client.containers.list(all=True))):
-        # context[i] = json.loads(str(client.containers.list(all=True)[i].attrs).replace("'", '"').replace("None", '"None"').replace("False", '"False"').replace("True", '"True"').replace('""False""', '"False"'))
-        context[i] = decode_dict(i, client.containers)
-    return JsonResponse(context)
+    return render(request, "tracking/home.html", context)
 
 def get_images(request: HttpRequest):
+    # print(decode_dict(client.images.list(all=True)[-1].attrs))
     context = {
-        "images": client.images.list(all=True)
+        "images": client.images.list(all=True),
     }
     return render(request, "tracking/allImages.html", context)
 
+def get_networks(request:HttpRequest):
+    context = {
+        "networks": client.networks.list()
+    }
+    return render(request, "tracking/allNetworks.html", context)
+
+def get_volumes(request:HttpRequest):
+    context = {
+        "volumes": client.volumes.list()
+    }
+    return render(request, "tracking/allVolumes.html", context)
+
+#===============================================================================
 def get_image_json(request:HttpRequest):
     context = {}
-    objectName = "images"
-    print(len(client.images.list(all=True)))
-    # time.sleep(100)
     for i in range(0, len(client.images.list(all=True))):
-        print(i)
-        context[i] = decode_dict(i, objectName)
+        context[i] = client.images.list(all=True)[i].attrs
+    print(context[0])
     return JsonResponse(context)
+
+
+def get_containers_json(request:HttpRequest):
+    context = {}
+    for i in range(0, len(client.containers.list(all=True))):
+        context[i] = client.containers.list(all=True)[i].attrs
+    return JsonResponse(context)
+
+
+#===============================================================================
 
 def detail_containers(request:HttpRequest, id:str):
     context = {
@@ -56,10 +70,29 @@ def detail_containers(request:HttpRequest, id:str):
     }
     return render(request, "tracking/detailContainers.html", context)
 
-def get_networks(request:HttpRequest):
-    print(client.networks.list()[0].attrs)
+def detail_images(request:HttpRequest, id:str):
     context = {
-        "networks": client.networks.list()
+        "images": client.images.get(id).attrs
     }
-    time.sleep(100)
-    return render(request, "tracking/allNetworks.html", context)
+    return render(request, "tracking/detailImages.html", context)
+
+
+
+#===============================================================================
+# def get_nodes_json(request:HttpRequest):
+#     context = {}
+#     for i in range(0, len(client.nodes.list())):
+#         context[i] = decode_dict(client.nodes.list()[i].attrs)
+#     return JsonResponse(context)
+
+def get_volumes_json(request:HttpRequest):
+    context = {}
+    for i in range(0, len(client.volumes.list())):
+        context[i] = client.volumes.list()[i].attrs
+    return JsonResponse(client.volumes.list().attrs)
+
+def get_services_json(request:HttpRequest):
+    context = {}
+    for i in range(0, len(client.services.list())):
+        context[i] = client.services.list()[i].attrs
+    return JsonResponse(context)

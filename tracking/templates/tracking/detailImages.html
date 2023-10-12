@@ -1,0 +1,12 @@
+{% extends 'tracking/base.html' %}
+
+{% block title %}
+    #{{images.short_id}}
+{% endblock %}
+
+{% block content %}
+
+    {% for key, value in images.items %}
+        {{key}}: {{value}} <br>
+    {% endfor %}
+{% endblock %}

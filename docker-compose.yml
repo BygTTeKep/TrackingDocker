@@ -10,18 +10,18 @@ services:
     volumes:
       - .:/TrackingDocker
 
-  worker:
-    build: 
-      context: .
-    hostname: worker
-    entrypoint: celery
-    command: -A celery_config.app worker -l INFO
-    volumes:
-      - .:/TrackingDocker
-    links:
-      - redis
-    depends_on:
-      - redis
+  # worker:
+  #   build: 
+  #     context: .
+  #   hostname: worker
+  #   entrypoint: celery
+  #   command: -A celery_config.app worker -l INFO
+  #   volumes:
+  #     - .:/TrackingDocker
+  #   links:
+  #     - redis
+  #   depends_on:
+  #     - redis
   # flower:
   #   build: 
   #     context: .
