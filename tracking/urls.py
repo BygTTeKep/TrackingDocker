@@ -9,8 +9,8 @@ from .views import (
     get_networks,
     get_volumes,
     get_volumes_json,
-    get_services_json,
     detail_images,
+    create_container,
 )
 
 
@@ -26,7 +26,6 @@ urlpatterns = [
     # path("api/networks", get_image_json, name="getNetworksApi"),
     path("volumes", get_volumes, name="getVolumes"),
     path("api/volumes", get_volumes_json, name="getVolumesApi"),
-    path("api/services", get_services_json, name="getServicesApi"),
-
-
+    # path("api/services", get_services_json, name="getServicesApi"),
+    path("create", create_container, name="create"),
 ]

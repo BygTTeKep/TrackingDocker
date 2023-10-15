@@ -18,9 +18,17 @@ def decode_dict(objectData:dict):
     #     objectAttrs = re.sub("CMD [\""+ r"[\w\.-]+"+ "\"]", re.search("CMD [\""+ r"[\w\.-]+"+ "\"]",objectFormat).group().replace('"', "'"), objectFormat)
     #     print( json.loads(objectAttrs))
 
+def create_container(request:HttpRequest):
+    if request.method == "POST":
+        image = request.POST.get("inputImage")
+        commands = str(request.POST.get("textAreaCommand"))
+        client.containers.create(image, commands)
+    else:
+        return render(request, "tracking/createContainer.html", {})
+    return render(request, "tracking/createContainer.html", {})
+
 
 def get_сontainers(request:HttpRequest):
-    # Добавить возможность создания конейнера (POST, GET ?) 
     context = {
         "containers":client.containers.list(all=True),
         # "statusContainer": status_container.delay()
@@ -51,7 +59,6 @@ def get_image_json(request:HttpRequest):
     context = {}
     for i in range(0, len(client.images.list(all=True))):
         context[i] = client.images.list(all=True)[i].attrs
-    print(context[0])
     return JsonResponse(context)
 
 
@@ -91,8 +98,9 @@ def get_volumes_json(request:HttpRequest):
         context[i] = client.volumes.list()[i].attrs
     return JsonResponse(client.volumes.list().attrs)
 
-def get_services_json(request:HttpRequest):
-    context = {}
-    for i in range(0, len(client.services.list())):
-        context[i] = client.services.list()[i].attrs
-    return JsonResponse(context)
+#docker-swarm
+# def get_services_json(request:HttpRequest):
+#     context = {}
+#     for i in range(0, len(client.services.list())):
+#         context[i] = client.services.list()[i].attrs
+#     return JsonResponse(context)

@@ -1,7 +1,17 @@
 {% extends 'tracking/base.html' %}
 
 {% block content %}
+<div class="list-group">
     {% for network in networks%}
-        {{network.attrs}} <br>
+    <div class="list-group-item list-group-item-action">
+        Name: {{network.attrs.Name}} <br>
+        Scope: {{network.attrs.Scope}} <br>
+        ConfigFrom: {{network.attrs.ConfigFrom}} <br>
+        Containers: {{network.attrs.Containers}} <br>
+        Labels: {{network.attrs.Labels}} <br>
+        Config: {{network.attrs.IPAM.Config}}
+        <!-- {{network.attrs}} <br> -->
+    </div>
     {% endfor %}
+</div>
 {% endblock %}

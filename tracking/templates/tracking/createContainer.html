@@ -1,0 +1,20 @@
+{% extends 'tracking/base.html' %}
+
+{% block title %}
+    create container
+{% endblock %}
+
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="inputImage" class="form-label">Image</label>
+            <input type="text" class="form-control" id="inputImage" placeholder="Example: redis:alpine3.18">
+        </div>
+        <div class="mb-3">
+            <label for="TextAreaCommand" class="form-label">Command</label>
+            <textarea class="form-control" id="TextAreaCommand" rows="3" placeholder="Example: redis-server"></textarea>
+        </div>
+        <button type="submit" class="btn btn-success">Create</button>
+    </form>
+{% endblock %}
