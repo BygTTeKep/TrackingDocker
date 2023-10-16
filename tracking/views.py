@@ -1,10 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpRequest, JsonResponse
 import docker
 import json
 # from .tasks import status_container
 import re
 import time
+from django.contrib import messages
 # Create your views here.
 client = docker.from_env()
 
@@ -28,8 +29,31 @@ def create_container(request:HttpRequest): #<===================================
         return render(request, "tracking/createContainer.html", {})
     return render(request, "tracking/createContainer.html", {})
 
+def init_docker_swarm(request:HttpRequest):
+    #Добавить проверки на существование
+    if request.method == "POST":
+        command = request.POST.get("initDockerSwarm")
+        client.swarm.init(command)
+        return redirect("tracking:getContainers")
+    else:
+        return render(request, "tracking/initDockerSwarm.html", {})
+    # return render(request, "tracking/initDockerSwarm.html", {})
+
+
+def leave_docker_swarm(request:HttpRequest):
+    if docker.DockerClient.info(client)["Swarm"]["ControlAvailable"]:
+        if docker.DockerClient.info(client)["Swarm"]["Managers"] == 1:
+            client.swarm.leave(force=True)
+        else: client.swarm.leave()
+        messages.success(request, "Succes")
+    else: messages.info(request, "Docker Swarm is not initialized")
+    return redirect("tracking:getContainers")
+
+#===============================================================================
 
 def get_сontainers(request:HttpRequest):
+    # print(client.ping())
+    #ping'ануть и проверить на активность docker engina
     context = {
         "containers":client.containers.list(all=True),
         # "statusContainer": status_container.delay()
@@ -87,11 +111,11 @@ def detail_images(request:HttpRequest, id:str):
 
 
 #===============================================================================
-# def get_nodes_json(request:HttpRequest):
-#     context = {}
-#     for i in range(0, len(client.nodes.list())):
-#         context[i] = decode_dict(client.nodes.list()[i].attrs)
-#     return JsonResponse(context)
+def get_nodes_json(request:HttpRequest):
+    context = {}
+    for i in range(0, len(client.nodes.list())):
+        context[i] = decode_dict(client.nodes.list()[i].attrs)
+    return JsonResponse(context)
 
 def get_volumes_json(request:HttpRequest):
     context = {}
@@ -100,8 +124,8 @@ def get_volumes_json(request:HttpRequest):
     return JsonResponse(client.volumes.list().attrs)
 
 #docker-swarm
-# def get_services_json(request:HttpRequest):
-#     context = {}
-#     for i in range(0, len(client.services.list())):
-#         context[i] = client.services.list()[i].attrs
-#     return JsonResponse(context)
+def get_services_json(request:HttpRequest):
+    context = {}
+    for i in range(0, len(client.services.list())):
+        context[i] = client.services.list()[i].attrs
+    return JsonResponse(context)

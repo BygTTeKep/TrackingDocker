@@ -11,6 +11,10 @@ from .views import (
     get_volumes_json,
     detail_images,
     create_container,
+    init_docker_swarm,
+    leave_docker_swarm,
+    # get_nodes_json,
+    get_services_json,
 )
 
 
@@ -26,6 +30,8 @@ urlpatterns = [
     # path("api/networks", get_image_json, name="getNetworksApi"),
     path("volumes", get_volumes, name="getVolumes"),
     path("api/volumes", get_volumes_json, name="getVolumesApi"),
-    # path("api/services", get_services_json, name="getServicesApi"),
+    path("api/services", get_services_json, name="getServicesApi"),
     path("create", create_container, name="create"),
+    path("initSwarm", init_docker_swarm, name="initSwarm"),
+    path("leaveSwarm", leave_docker_swarm, name="leaveSwarm"),
 ]

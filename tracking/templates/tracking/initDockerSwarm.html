@@ -1,0 +1,16 @@
+{% extends 'tracking/base.html' %}
+
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label for="initDockerSwarm" class="form-label">Command</label>
+        <textarea class="form-control" id="initDockerSwarm" rows="3"
+            placeholder="Example: advertise_addr='eth0', listen_addr='0.0.0.0:5000',
+            force_new_cluster=False, default_addr_pool=['10.20.0.0/16],
+            subnet_size=24, snapshot_interval=5000,
+            log_entries_for_slow_followers=1200"></textarea>
+    </div>
+    <button type="submit" class="btn btn-success">Create</button>
+</form>
+{% endblock %}

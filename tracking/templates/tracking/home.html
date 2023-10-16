@@ -46,7 +46,7 @@
     }
 </style>
 <div>
-    <a href="{% url 'tracking:create' %}"><button type="button" class="btn btn-primary">Create containers</button></a>
+    <a href="{% url 'tracking:create' %}"><button type="button" class="btn btn-primary">Create containers</button></a><a href="{% url 'tracking:initSwarm' %}" style="padding-left: 10px;"><button type="button" class="btn btn-primary">Init swarm</button></a><a href="{% url 'tracking:leaveSwarm' %}" style="padding-left: 10px;"><button type="button" class="btn btn-primary">Leave swarm</button></a>
 </div> <br>
 <div class="list-group">
     {% if containers %}
