@@ -45,17 +45,17 @@
         float: right;
     }
 </style>
+<div>
+    <a href="{% url 'tracking:create' %}"><button type="button" class="btn btn-primary">Create containers</button></a>
+</div> <br>
 <div class="list-group">
-    <div>
-        <a href="{% url 'tracking:create' %}"><button type="button" class="btn btn-primary">Create containers</button></a>
-    </div>
     {% if containers %}
         {% for container in containers %}
             <a href="{% url 'tracking:detailContainers' container.short_id %}" class="list-group-item list-group-item-action">
                 <div>
                     <ul>
                         <li>
-                            short_id: {{container.short_id}} 
+                            short_id: {{container.short_id}} <br>
                             Name: {{ container.attrs.Name }}<br>
                             Paused: {{container.attrs.State.Paused}} <br> 
                             Status: {% if container.statusContainer %} True {% else %} False {% endif %}

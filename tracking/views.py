@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpRequest, JsonResponse
 import docker
 import json
-from .tasks import status_container
+# from .tasks import status_container
 import re
 import time
 # Create your views here.
@@ -18,11 +18,12 @@ def decode_dict(objectData:dict):
     #     objectAttrs = re.sub("CMD [\""+ r"[\w\.-]+"+ "\"]", re.search("CMD [\""+ r"[\w\.-]+"+ "\"]",objectFormat).group().replace('"', "'"), objectFormat)
     #     print( json.loads(objectAttrs))
 
-def create_container(request:HttpRequest):
+
+def create_container(request:HttpRequest): #<=====================================
     if request.method == "POST":
         image = request.POST.get("inputImage")
         commands = str(request.POST.get("textAreaCommand"))
-        client.containers.create(image, commands)
+        client.containers.create(image, command=commands)
     else:
         return render(request, "tracking/createContainer.html", {})
     return render(request, "tracking/createContainer.html", {})

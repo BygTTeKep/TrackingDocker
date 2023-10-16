@@ -11,6 +11,11 @@
             <a href="{% url 'tracking:detailImages' image.short_id %}" class="list-group-item list-group-item-action">
                 short_id: {{ image.short_id }}<br>
                 Name: {{ image.attrs.RepoTags }}<br>
+                Labels: 
+                {% for key, value in image.attrs.Config.Labels.items %}
+                    {{ key }}: {{ value }} |
+                {% endfor %}
+                <!-- Labels: {{ image.attrs.Config.Labels }} -->
                 {% if image.attrs.DockerVersion %} DockerVersion: {{ image.attrs.DockerVersion }}<br> {% endif %}
                 {% if image.attrs.ContainerConfig.Volumes %} Volumes: {{ image.attrs.ContainerConfig.Volumes }}<br> {% endif %}
                 {% if image.attrs.ContainerConfig.WorkingDir %} WorkingDir: {{ image.attrs.ContainerConfig.WorkingDir }}<br> {% endif %}
