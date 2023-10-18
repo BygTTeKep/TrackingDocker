@@ -11,11 +11,13 @@ from .views import (
     get_volumes_json,
     detail_images,
     create_container,
-    init_docker_swarm,
+    # init_docker_swarm,
     leave_docker_swarm,
     # get_nodes_json,
     get_services_json,
+    login_docker,
 )
+from .tasks import init_docker_swarm
 
 
 app_name="tracking"
@@ -34,4 +36,5 @@ urlpatterns = [
     path("create", create_container, name="create"),
     path("initSwarm", init_docker_swarm, name="initSwarm"),
     path("leaveSwarm", leave_docker_swarm, name="leaveSwarm"),
+    path("login", login_docker, name="login"),
 ]
