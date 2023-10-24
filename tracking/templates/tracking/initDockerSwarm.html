@@ -6,11 +6,22 @@
     <div class="mb-3">
         <label for="initDockerSwarm" class="form-label">Command</label>
         <textarea class="form-control" id="initDockerSwarm" rows="3"
-            placeholder="Example: advertise_addr='eth0', listen_addr='0.0.0.0:5000',
-            force_new_cluster=False, default_addr_pool=['10.20.0.0/16],
-            subnet_size=24, snapshot_interval=5000,
-            log_entries_for_slow_followers=1200"></textarea>
+            placeholder="Example: advertise_addr='eth0', listen_addr='0.0.0.0:5000',force_new_cluster=False, default_addr_pool=['10.20.0.0/16],subnet_size=24, snapshot_interval=5000,log_entries_for_slow_followers=1200"></textarea>
     </div>
     <button type="submit" class="btn btn-success">Create</button>
 </form>
+<div>
+    <br>
+    <p>advertise_addr (str) –
+        Externally reachable address advertised to other nodes. This can either be an address/port combination in the form 192.168.1.1:4567, or an interface followed by a port number, like eth0:4567. If the port number is omitted, the port number from the listen address is used.        
+        If not specified, it will be automatically detected when possible.
+    </p>
+    <p>listen_addr (str) – Listen address used for inter-manager communication, as well as determining the networking interface used for the VXLAN Tunnel Endpoint (VTEP). This can either be an address/port combination in the form 192.168.1.1:4567, or an interface followed by a port number, like eth0:4567. If the port number is omitted, the default swarm listening port is used. Default: 0.0.0.0:2377</p>
+    <p>force_new_cluster (bool) – Force creating a new Swarm, even if already part of one. Default: False</p>
+    <p>default_addr_pool (list of str) – Default Address Pool specifies default subnet pools for global scope networks. Each pool should be specified as a CIDR block, like ‘10.0.0.0/8’. Default: None</p>
+    <p>subnet_size (int) – SubnetSize specifies the subnet size of the networks created from the default subnet pool. Default: None</p>
+    <p>snapshot_interval (int) – Number of logs entries between snapshot.</p>
+    <p>log_entries_for_slow_followers (int) – Number of log entries to keep around to sync up slow followers after a snapshot is created.</p>
+    <p><a href="https://docker-py.readthedocs.io/en/stable/swarm.html" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Additional information about commands</a></p>
+</div>
 {% endblock %}

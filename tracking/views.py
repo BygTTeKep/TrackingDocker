@@ -1,10 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpRequest, JsonResponse, HttpResponse
 import docker
-import json
-# from .tasks import status_container
-import re
-import time
 from django.contrib import messages
 from .forms import LoginForm
 # Create your views here.
@@ -22,15 +18,6 @@ def decode_dict(objectData:dict):
 
 
 def login_docker(request:HttpRequest):
-    # Добавить аутентификацию 
-    # Пользователя в бд для токена
-    '''
-        Описать модель с полями 
-        email
-        username
-        password
-        и валидировать полученные данные из post запроса
-    '''
     if request.method == "POST":
         form = LoginForm(request.POST)
         if form.is_valid():
@@ -40,9 +27,6 @@ def login_docker(request:HttpRequest):
             response = client.login(email=email, username=username, password=password)
             if response["Status"] == "Login Succeeded":
                 return redirect("tracking:getContainers")
-        # if HttpResponse.status_code == 401:
-        #     return redirect("tracking:login")
-        # print(response) => {'IdentityToken': '', 'Status': 'Login Succeeded'}
     else:
         form = LoginForm()
         return render(request, "tracking/login.html", {"form": form})
@@ -58,14 +42,12 @@ def create_container(request:HttpRequest): #<===================================
     return render(request, "tracking/createContainer.html", {"dockerVersion": client.version()["Version"],})
 
 def init_docker_swarm(request:HttpRequest):
-    #Добавить проверки на существование
     if request.method == "POST":
         command = request.POST.get("initDockerSwarm")
         client.swarm.init(command)
         return redirect("tracking:getContainers")
     else:
         return render(request, "tracking/initDockerSwarm.html", {"dockerVersion": client.version()["Version"],})
-    # return render(request, "tracking/initDockerSwarm.html", {})
 
 
 def leave_docker_swarm(request:HttpRequest):
@@ -87,10 +69,9 @@ def get_сontainers(request:HttpRequest):
             # "statusContainer": status_container.delay()
         }
         return render(request, "tracking/home.html", context)
-    else: ...
+    else: messages.error(request, "Docker is not running")
 
 def get_images(request: HttpRequest):
-    # print(decode_dict(client.images.list(all=True)[-1].attrs))
     context = {
         "images": client.images.list(all=True),
         "dockerVersion": client.version()["Version"],
@@ -129,13 +110,15 @@ def get_containers_json(request:HttpRequest):
 
 def detail_containers(request:HttpRequest, id:str):
     context = {
-        "container": client.containers.get(id).attrs
+        "container": client.containers.get(id).attrs,
+        "dockerVersion": client.version()["Version"],
     }
     return render(request, "tracking/detailContainers.html", context)
 
 def detail_images(request:HttpRequest, id:str):
     context = {
-        "images": client.images.get(id).attrs
+        "images": client.images.get(id).attrs,
+        "dockerVersion": client.version()["Version"],
     }
     return render(request, "tracking/detailImages.html", context)
 
@@ -154,7 +137,6 @@ def get_volumes_json(request:HttpRequest):
         context[i] = client.volumes.list()[i].attrs
     return JsonResponse(client.volumes.list().attrs)
 
-#docker-swarm
 def get_services_json(request:HttpRequest):
     context = {}
     for i in range(0, len(client.services.list())):
