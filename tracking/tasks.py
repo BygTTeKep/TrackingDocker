@@ -1,4 +1,5 @@
 from celery import shared_task, signals
+from celery_config import app
 import time
 import docker
 from celery_singleton import Singleton
@@ -16,11 +17,11 @@ from celery_singleton import Singleton
 #             else: cs[container.short_id] = False
 #         return cs
 # На фон инициализация docker swarm и leave
-# @shared_task()
-# def init_docker_swarm_task(command):
-#     from .views import client
-#     client.swarm.init(command)
-#     print("id")
+@app.task
+def init_docker_swarm_task(command):
+    client = docker.from_env()
+    return client.swarm.init(command)
+    # print("id")
 
 # @shared_task(base=Singleton)
 # def leave_docker_swarm():

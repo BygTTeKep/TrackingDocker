@@ -1,5 +1,7 @@
+from django.urls import path, re_path
+from rest_framework_swagger.views import get_swagger_view
 
-from django.urls import path
+# from django.conf.urls import url
 from .views import (
     get_сontainers,
     detail_containers,
@@ -15,6 +17,10 @@ from .views import (
     get_services_json,
     login_docker,
     init_docker_swarm,
+    ContainerApi,
+    ImageApi,
+    NetworkApi,
+    VolumesApi
 )
 # from .tasks import init_docker_swarm_task
 
@@ -35,4 +41,10 @@ urlpatterns = [
     path("initSwarm", init_docker_swarm, name="initSwarm"),
     path("leaveSwarm", leave_docker_swarm, name="leaveSwarm"),
     path("login", login_docker, name="login"),
+    path("doc/containers", ContainerApi.as_view()),
+    path("doc/images", ImageApi.as_view()),
+    path("doc/networks", NetworkApi.as_view()),
+    path("doc/volumes", VolumesApi.as_view()),
+
+    
 ]

@@ -3,13 +3,21 @@ from django.http import HttpRequest, JsonResponse, HttpResponse
 import docker
 from django.contrib import messages
 from .forms import LoginForm
+
+import json
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
 # Create your views here.
 client = docker.from_env()
 
+
+
+#===============================================================================
 # переписать 
 def decode_dict(objectData:dict):
     objectFormat = str(objectData).replace("'", '"').replace("None", '"None"').replace("False", '"False"').replace("True", '"True"').replace('""False""', '"False"')
-    print(objectFormat)
+    return(objectFormat)
     # if re.search("CMD [\""+ r"[\w\.-]+"+ "\"]", objectFormat) == None:
     #     print( json.loads(objectFormat))
     # else:
@@ -42,9 +50,11 @@ def create_container(request:HttpRequest): #<===================================
     return render(request, "tracking/createContainer.html", {"dockerVersion": client.version()["Version"],})
 
 def init_docker_swarm(request:HttpRequest):
+    from .tasks import init_docker_swarm_task
     if request.method == "POST":
         command = request.POST.get("initDockerSwarm")
-        client.swarm.init(command)
+        # client.swarm.init(command)
+        init_docker_swarm_task.delay(command)
         return redirect("tracking:getContainers")
     else:
         return render(request, "tracking/initDockerSwarm.html", {"dockerVersion": client.version()["Version"],})
@@ -142,3 +152,33 @@ def get_services_json(request:HttpRequest):
     for i in range(0, len(client.services.list())):
         context[i] = client.services.list()[i].attrs
     return JsonResponse(context)
+#===============================================================================
+
+
+class ContainerApi(APIView):
+    def get(self, request:HttpRequest):
+        context = {}
+        for i in range(0, len(client.containers.list(all=True))):
+            context[i] = client.containers.list(all=True)[i].attrs
+        return Response(context)
+    
+class ImageApi(APIView):
+    def get(self, request:HttpRequest):
+        context = {}
+        for i in range(0, len(client.images.list(all=True))):
+            context[i] = client.images.list(all=True)[i].attrs
+        return Response(context)
+    
+class NetworkApi(APIView):
+    def get(self,request:HttpRequest):
+        context = {}
+        for i in range(0, len(client.networks.list())):
+            context[i] = client.networks.list()[i].attrs
+        return Response(context)
+    
+class VolumesApi(APIView):
+    def get(self,request:HttpRequest):
+        context = {}
+        for i in range(0, len(client.volumes.list())):
+            context[i] = client.volumes.list()[i].attrs
+        return Response(context)
