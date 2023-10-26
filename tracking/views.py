@@ -3,6 +3,8 @@ from django.http import HttpRequest, JsonResponse, HttpResponse
 import docker
 from django.contrib import messages
 from .forms import LoginForm
+from drf_spectacular.utils import extend_schema
+
 
 import json
 
@@ -103,18 +105,36 @@ def get_volumes(request:HttpRequest):
     return render(request, "tracking/allVolumes.html", context)
 
 #===============================================================================
-def get_image_json(request:HttpRequest):
-    context = {}
-    for i in range(0, len(client.images.list(all=True))):
-        context[i] = client.images.list(all=True)[i].attrs
-    return JsonResponse(context)
+# def get_image_json(request:HttpRequest):
+#     context = {}
+#     for i in range(0, len(client.images.list(all=True))):
+#         context[i] = client.images.list(all=True)[i].attrs
+#     return JsonResponse(context)
 
 
-def get_containers_json(request:HttpRequest):
-    context = {}
-    for i in range(0, len(client.containers.list(all=True))):
-        context[i] = client.containers.list(all=True)[i].attrs
-    return JsonResponse(context)
+# def get_containers_json(request:HttpRequest):
+#     context = {}
+#     for i in range(0, len(client.containers.list(all=True))):
+#         context[i] = client.containers.list(all=True)[i].attrs
+#     return JsonResponse(context)
+
+# def get_nodes_json(request:HttpRequest):
+#     context = {}
+#     for i in range(0, len(client.nodes.list())):
+#         context[i] = decode_dict(client.nodes.list()[i].attrs)
+#     return JsonResponse(context)
+
+# def get_volumes_json(request:HttpRequest):
+#     context = {}
+#     for i in range(0, len(client.volumes.list())):
+#         context[i] = client.volumes.list()[i].attrs
+#     return JsonResponse(client.volumes.list().attrs)
+
+# def get_services_json(request:HttpRequest):
+#     context = {}
+#     for i in range(0, len(client.services.list())):
+#         context[i] = client.services.list()[i].attrs
+#     return JsonResponse(context)
 
 #===============================================================================
 
@@ -134,24 +154,7 @@ def detail_images(request:HttpRequest, id:str):
 
 
 
-#===============================================================================
-def get_nodes_json(request:HttpRequest):
-    context = {}
-    for i in range(0, len(client.nodes.list())):
-        context[i] = decode_dict(client.nodes.list()[i].attrs)
-    return JsonResponse(context)
 
-def get_volumes_json(request:HttpRequest):
-    context = {}
-    for i in range(0, len(client.volumes.list())):
-        context[i] = client.volumes.list()[i].attrs
-    return JsonResponse(client.volumes.list().attrs)
-
-def get_services_json(request:HttpRequest):
-    context = {}
-    for i in range(0, len(client.services.list())):
-        context[i] = client.services.list()[i].attrs
-    return JsonResponse(context)
 #===============================================================================
 
 
